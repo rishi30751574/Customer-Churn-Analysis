@@ -87,29 +87,45 @@ The following technologies and libraries were used:
 
 ### 1. Data Preprocessing
 - **Missing Values**: Handled missing data by removing or imputing where necessary.
-- **Encoding**: Categorical features like customer types were label encoded.
+- **Encoding**: Categorical features like customer types were target encoded.
 - **Normalization**: Numeric features were scaled using `StandardScaler` for optimal model performance.
 
-### 2. Model Selection and Tuning
+## 2. Logistic Regression Model
+
+### a. Model Selection and Tuning
 - **Base Model**: Logistic Regression was selected as the classification model.
 - **Hyperparameter Tuning**: Used GridSearchCV to find the best parameters for `C`, `penalty`, and `solver`.
   - **Cross-validation** was performed using Stratified K-Folds (sklearn) for robust model evaluation.
 
-### 3. Model Training
+### b. Model Training
 - **Regularization**: L2 regularization was applied to avoid overfitting.
 - **Training Data**: The model was trained on the processed dataset with balanced class weights.
 
-### 4. Model Evaluation
+---
+
+## 3. XGBoost Model
+
+## a. Model Selection and Tuning
+- **Base Model**: XGBoost (`XGBClassifier`) was selected due to its efficiency in handling large datasets and its robustness with imbalanced classes.
+- **Hyperparameter Tuning**: The early_boosting_rounds feature in XGBclassifier was used to find the optimal number of trees to avoid overfitting
+- **Cross-Validation**: Performed using `StratifiedKFold` to handle class imbalance and ensure robust model evaluation.
+
+## b. Model Training
+- **Boosting Method**: Gradient boosting was employed to iteratively improve the model.
+- **Training Data**: The model was trained on a processed dataset, with `scale_pos_weight` set to handle class imbalance.
+
+## 4. Model Evaluation
 - **Metrics Used**:
-  - **F1 Score**: To account for precision and recall in an imbalanced dataset.
-  - **Cross-validation Score**: To ensure generalizability.
-  - **Test Performance**: Evaluated using the F1 score on the test set.
+  - **Accuracy**: Overall correctness of the model.
+  - **F1 Score**: To balance precision and recall, especially for the imbalanced dataset.
+- **Cross-validation Score**: Used to assess model generalizability across data splits.
+- **Test Performance**: Evaluated on the test set using accuracy and F1 score.
 
 ---
 
 ## 6. Results Explanation <a name="results-explanation"></a>
 
-### Model Performance
+### 1. Logistic Regression Performance
 
 #### Cross-Validation Score
 - **Regularization Parameter (C)**: 0.5
@@ -125,6 +141,21 @@ The cross-validation score of 0.8 suggests that the model generalizes well acros
 The F1 score of 0.85 on the test set indicates strong performance on unseen data, maintaining a good balance between precision and recall.
 
 ---
+
+### 2. XGBoost Performance
+
+#### Cross-Validation Score
+- **n_estimators**: 124
+- **scale_pos_weight**: 10
+- **eval_metric**: AUC
+- **Cross-Validation Score**: 0.91
+
+The cross-validation score of 0.91 suggests that the model generalizes well across different folds of the training data.
+
+#### Test Set Performance
+- **F1 Score on Test Set**: 0.9
+
+The F1 score of 0.9 on the test set indicates strong performance on unseen data, maintaining a good balance between precision and recall.
 
 ### Feature Importance
 To interpret the model, feature importance analysis was performed:
